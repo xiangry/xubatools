@@ -1,0 +1,8 @@
+{
+  "name": "tools",
+  "version": "1.0.0",
+  "dependencies": {
+    "xlsx": "^0.14.1",
+    "electron": "^3.0.12"
+  }
+}
