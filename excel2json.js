@@ -2,6 +2,8 @@ const ToolUtil = require("./util_tool");
 var XLSX = require("xlsx")
 const fs = require("fs");
 
+const export_path = "out"
+
 function convertSheet2Json(ws, name) {
     var ref = ws["!ref"]
     var cols = ref.replace(/[0-9]/g, "").split(":");
@@ -21,9 +23,10 @@ function convertSheet2Json(ws, name) {
     }
 
     const str_data = JSON.stringify(jsondata);
-    fs.mkdir("out", function (err) {
+    ToolUtil.deleteFolder(export_path);
+    fs.mkdir(export_path, function (err) {
         if (!err || err.code === "EEXIST"){
-            fs.writeFile("out/" + name + ".json", str_data, function (err) {
+            fs.writeFile(export_path + "/" + name + ".json", str_data, function (err) {
                 if (err){
                     console.log("写文件错误");
                 } else {
@@ -43,10 +46,9 @@ function convertExcel2Json(file) {
     wb.SheetNames.forEach(function (name) {
         convertSheet2Json(wb.Sheets[name], name);
     })
-
 }
 
-convertExcel2Json("./test/level_exp.xlsx");
+convertExcel2Json("./config/level_exp.xlsx");
 
 
 // console.log("jsondata ===== ", JSON.stringify(jsondata))

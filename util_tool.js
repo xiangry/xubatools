@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 var ToolUtil = {}
 
 ToolUtil.value2key = function(value){
@@ -48,5 +50,32 @@ ToolUtil.getValidKeyIds = function(ws, cols){
     return valid_keys;
 }
 
+ToolUtil.emptyDir = function(path){
+    var files = fs.readdirSync(path);
+    files.forEach(function (file) {
+        var stats = fs.statSync(path + "/" + file);
+        if (stats.isDirectory()){
+            ToolUtil.emptyDir(path + "/" + file)
+        } else {
+            fs.unlinkSync(path + "/" + file)
+        }
+    })
+}
+
+ToolUtil.deleteFolder = function(path, func){
+    var files = [];
+    if( fs.existsSync(path) ) {
+        files = fs.readdirSync(path);
+        files.forEach(function(file,index){
+            var curPath = path + "/" + file;
+            if(fs.statSync(curPath).isDirectory()) { // recurse
+                ToolUtil.deleteFolder(curPath);
+            } else { // delete file
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+};
 
 module.exports = ToolUtil;
